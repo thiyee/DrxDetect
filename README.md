@@ -1,0 +1,11 @@
+这是一份纯三环的用于检测x64程序 硬件断点的项目
+
+工作原理
+项目并不使用GetThreadContext来获取线程上下文 由于这个函数是易受攻击的
+使用SetThreadContext占用所有硬件断点 并触发它们每一个 即可验证SetThreadContext是否被挂钩
+获取调试寄存器主要通过except-filter函数来获取
+通过在except-filter函数中设置调试寄存器 可以避免SetThreadContext被hook后获取到我们的测试值
+
+该项目对于仅通过hook GetThreadContext/SetThreadContext来设置硬件断点并隐藏的调试器是非常有效的
+
+这只是一个抛砖引玉的项目  如果你有更好的点子或对该项目有任何建议 请留言或 发送邮件到1911517883@qq.com
