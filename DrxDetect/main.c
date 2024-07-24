@@ -45,6 +45,7 @@ BOOLEAN DrxDetectByGetThreadContext() {
 	else if (Context.Dr6 != 0) { printf("Invalid Dr6:%llx\n", Context.Dr6); bDetect = TRUE; }
 	else if (Context.Dr7 != 0) { printf("Invalid Dr7:%llx\n", Context.Dr7); bDetect = TRUE; }
 	else  bDetect = FALSE;
+	return bDetect;
 }
 int ExceptionContextHandler(PEXCEPTION_POINTERS Ex) {
 	BOOLEAN bDetect = TRUE;
@@ -58,7 +59,11 @@ int ExceptionContextHandler(PEXCEPTION_POINTERS Ex) {
 
 	if (bDetect) return EXCEPTION_EXECUTE_HANDLER;
 	else {
+#ifdef WIN32
+		Ex->ContextRecord->Eip += 1;
+#else
 		Ex->ContextRecord->Rip += 1;
+#endif
 		Ex->ContextRecord->Dr0 = 0x111111;
 		Ex->ContextRecord->Dr1 = 0x222222;
 		Ex->ContextRecord->Dr2 = 0x333333;
